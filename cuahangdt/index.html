@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP PRO - Phone Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🔥 VIP PRO - Phone Store 🔥</h1>
+            <form id="search-form" class="search-form">
+                <input type="text" id="search-input" name="search" placeholder="Search products...">
+                <button type="submit">Search</button>
+            </form>
+            <nav>
+                <ul>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">📱 Categories</a>
+                        <div class="dropdown-content" id="category-list">
+                            <a href="#" onclick="loadProducts()">All Products</a>
+                        </div>
+                    </li>
+                    <li><a href="cart.php" class="cart">🛒 Cart</a></li>
+                    <li><a href="contact.html" class="contact">📞 Contact</a></li> <!-- Thêm nút Contact -->
+                    <li><a href="logout.php" class="logout">🚪 Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="banner">
+        <h2>🔥 Big Sale - Up to 50% Off! 🔥</h2>
+    </section>
+
+    <section class="products">
+        <div class="product-list" id="product-list">
+            </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 VIP PRO Phone Store - All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Load categories dynamically
+        function loadCategories() {
+            fetch("get_categories.php")
+                .then(response => response.json())
+                .then(data => {
+                    let categoryList = document.getElementById("category-list");
+                    // Xóa các category cũ (trừ link "All Products")
+                    categoryList.innerHTML = '<a href="#" onclick="loadProducts()">All Products</a>';
+                    data.forEach(category => {
+                        let categoryHTML = `<a href="#" onclick="loadProducts(${category.category_id})">${category.category_name}</a>`;
+                        categoryList.innerHTML += categoryHTML;
+                    });
+                })
+                .catch(error => console.error("Error loading categories:", error));
+        }
+
+        // Load products dynamically (có thêm tham số search)
+        function loadProducts(categoryId = null, searchTerm = null) { // *** THÊM THAM SỐ searchTerm ***
+            let url = new URL("get_products.php", window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/'); // *** Đảm bảo URL đúng ***
+
+            if (categoryId) {
+                url.searchParams.append('category', categoryId);
+            }
+
+            // *** LẤY searchTerm TỪ THAM SỐ HÀM ***
+            if (searchTerm) {
+                 url.searchParams.append('search', searchTerm);
+            }
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    // Kiểm tra xem response có phải JSON không
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                         return response.json();
+                    } else {
+                         // Nếu không phải JSON, đọc text để xem lỗi PHP (nếu có)
+                         return response.text().then(text => {
+                             console.error("Received non-JSON response:", text);
+                             throw new Error("Server did not return JSON.");
+                         });
+                    }
+                 })
+                .then(data => {
+                    let productList = document.getElementById("product-list");
+                    productList.innerHTML = ""; // Xóa sản phẩm cũ
+
+                    if (data.error) {
+                        console.error("Error from server:", data.error);
+                        productList.innerHTML = `<p>Error loading products: ${data.error}</p>`;
+                        return;
+                    }
+                    if (data.length === 0) {
+                         productList.innerHTML = "<p>No products found.</p>";
+                         return;
+                    }
+
+                    data.forEach(product => {
+                        let productHTML = `
+                            <div class="product">
+                                <img src="${product.product_image}" alt="${product.product_name}">
+                                <h3>${product.product_name}</h3>
+                                <p class="price">💰 ${new Intl.NumberFormat('vi-VN').format(product.product_price)} VND</p>
+                                <button class="btn-buy" onclick="addToCart(${product.product_id})">⚡ Buy Now</button>
+                            </div>
+                        `;
+                        productList.innerHTML += productHTML;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading products:", error);
+                    document.getElementById("product-list").innerHTML = `<p>Error loading products. Please check the console.</p>`;
+                 });
+        }
+
+        // Add to cart function
+        function addToCart(productId) {
+            // Giả sử bạn muốn thêm vào giỏ hàng bằng cách chuyển trang
+            // Hoặc bạn có thể dùng fetch để gửi yêu cầu ngầm
+            window.location.href = `cart.php?add=${productId}`;
+        }
+
+        // Load categories and products when the page is ready
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCategories();
+            loadProducts(); // Tải tất cả sản phẩm ban đầu
+
+            // *** THÊM EVENT LISTENER CHO FORM TÌM KIẾM ***
+            const searchForm = document.getElementById('search-form');
+            const searchInput = document.getElementById('search-input');
+
+            searchForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Ngăn form gửi đi và tải lại trang
+                const searchTerm = searchInput.value.trim(); // Lấy giá trị từ ô input
+                loadProducts(null, searchTerm); // Gọi hàm loadProducts với từ khóa tìm kiếm
+            });
+
+             // Optional: Tìm kiếm ngay khi gõ (live search)
+             /*
+             let searchTimeout;
+             searchInput.addEventListener('input', function() {
+                 clearTimeout(searchTimeout);
+                 searchTimeout = setTimeout(() => {
+                     const searchTerm = searchInput.value.trim();
+                     loadProducts(null, searchTerm);
+                 }, 500); // Chờ 500ms sau khi ngừng gõ mới tìm
+             });
+             */
+        });
+    </script>
+</body>
+</html>

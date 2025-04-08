@@ -1,0 +1,409 @@
+/* === Import Font & Thiết lập biến CSS === */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+    /* Giữ gradient gốc làm màu chính, thêm các màu khác */
+    --gradient-primary: linear-gradient(135deg, #007bff, #00aaff);
+    --primary-color: #007bff; /* Màu xanh dương cơ bản (dùng khi không cần gradient) */
+    --accent-color: #ff9900; /* Màu cam nhấn (giữ màu gốc của bạn) */
+    --accent-hover-color: #e67e22; /* Màu cam đậm hơn khi hover */
+    --light-color: #ffffff; /* Màu trắng */
+    --dark-color: #343a40; /* Màu chữ tối */
+    --gray-bg-color: #f8f9fa; /* Màu nền xám nhạt */
+    --border-color: #dee2e6; /* Màu viền */
+    --font-family: 'Roboto', sans-serif;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Bóng đổ nhẹ nhàng hơn */
+    --box-shadow-hover: 0 6px 15px rgba(0, 0, 0, 0.12); /* Bóng đổ đậm hơn khi hover */
+    --border-radius: 8px; /* Bo góc thống nhất */
+    --container-width: 1200px;
+}
+
+/* === Reset & Kiểu cơ bản === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: var(--gray-bg-color); /* Nền xám nhạt cho trang */
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: darken(var(--primary-color), 10%);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit; /* Kế thừa font từ body */
+}
+
+/* === HEADER === */
+header {
+    background: var(--gradient-primary);
+    padding: 1rem 0; /* Sử dụng rem thay vì px */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Giảm độ đậm của bóng */
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Sử dụng Flexbox để sắp xếp header */
+header .container {
+    display: flex;
+    justify-content: space-between; /* Phân bố không gian */
+    align-items: center;
+    flex-wrap: wrap; /* Cho phép xuống dòng */
+    gap: 1rem; /* Khoảng cách giữa các phần tử con */
+}
+
+header h1 {
+    font-size: 1.8rem; /* Kích thước chữ linh hoạt */
+    font-weight: 700;
+    color: var(--light-color);
+    margin: 0; /* Bỏ margin mặc định */
+    flex-shrink: 0; /* Ngăn không bị co lại */
+}
+
+/* === SEARCH FORM (Trong Header) === */
+.search-form {
+    display: flex;
+    align-items: center;
+    background-color: var(--light-color); /* Nền trắng */
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    flex-grow: 1; /* Cho phép co giãn */
+    max-width: 450px; /* Giới hạn chiều rộng */
+    margin: 0; /* Bỏ margin cũ */
+}
+
+.search-form input[type="text"] {
+    border: none;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+    outline: none;
+    flex-grow: 1;
+    color: var(--dark-color);
+}
+
+.search-form input[type="text"]::placeholder {
+    color: #999; /* Màu cho placeholder */
+}
+
+.search-form button {
+    background-color: var(--accent-color);
+    color: var(--light-color);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.search-form button:hover {
+    background-color: var(--accent-hover-color);
+}
+
+/* === NAVIGATION === */
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0; /* Bỏ margin cũ */
+}
+
+nav ul li {
+    margin-left: 0.8rem; /* Giảm khoảng cách */
+}
+
+/* Style chung cho link nav & dropdown button */
+nav a, .dropbtn {
+    color: var(--light-color);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500; /* Giảm độ đậm 1 chút */
+    padding: 0.6rem 0.9rem; /* Điều chỉnh padding */
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
+    display: inline-block; /* Đảm bảo padding hoạt động đúng */
+}
+
+nav a:hover, .dropbtn:hover {
+    background: rgba(255, 255, 255, 0.15); /* Nền mờ hơn khi hover */
+}
+
+/* Nút Cart & Logout */
+nav .cart,
+nav .logout {
+    background-color: var(--accent-color);
+    font-weight: 500;
+}
+
+nav .cart:hover,
+nav .logout:hover {
+    background-color: var(--accent-hover-color);
+}
+
+/* === DROPDOWN MENU === */
+.dropdown {
+    position: relative; /* Giữ nguyên */
+}
+
+.dropbtn {
+    background: none; /* Giữ nguyên */
+    border: none; /* Giữ nguyên */
+    cursor: pointer; /* Giữ nguyên */
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--light-color); /* Nền trắng */
+    min-width: 200px; /* Tăng nhẹ chiều rộng */
+    box-shadow: var(--box-shadow); /* Sử dụng biến bóng đổ */
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    z-index: 999;
+    margin-top: 0.5rem; /* Thêm khoảng cách với nút categories */
+    border: 1px solid var(--border-color); /* Thêm viền nhẹ */
+}
+
+.dropdown-content a {
+    color: var(--dark-color);
+    padding: 0.8rem 1.2rem; /* Tăng padding */
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-bottom: 1px solid #f0f0f0; /* Viền mờ hơn */
+    font-size: 0.95rem;
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--gray-bg-color);
+    color: var(--primary-color); /* Đổi màu chữ khi hover */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* === BANNER === (Thêm style dựa trên HTML) */
+.banner {
+    background: linear-gradient(to right, #6dd5ed, #2193b0); /* Gradient khác cho banner */
+    color: var(--light-color);
+    text-align: center;
+    padding: 3rem 1rem;
+    margin: 2rem auto; /* Khoảng cách trên dưới, căn giữa */
+    border-radius: var(--border-radius);
+    max-width: var(--container-width); /* Giới hạn chiều rộng */
+}
+
+.banner h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* === PRODUCT LIST === */
+.products {
+    padding: 2rem 0; /* Thêm khoảng cách section */
+}
+
+.product-list {
+    display: grid;
+    /* Điều chỉnh minmax để thẻ cân đối hơn */
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem; /* Tăng khoảng cách */
+    /* Bỏ padding và justify-content ở đây, để container xử lý */
+}
+
+.product {
+    background: var(--light-color);
+    padding: 1.5rem; /* Tăng padding */
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Bỏ max-width và margin: auto để grid xử lý */
+    display: flex; /* Sử dụng flex để căn chỉnh nội dung */
+    flex-direction: column;
+    justify-content: space-between; /* Đẩy nút xuống dưới */
+}
+
+.product:hover {
+    transform: translateY(-6px); /* Tăng hiệu ứng hover */
+    box-shadow: var(--box-shadow-hover);
+}
+
+.product img {
+    width: 85%; /* Giảm chiều rộng ảnh để có khoảng trắng */
+    height: 200px;
+    object-fit: contain; /* Thay cover thành contain để thấy toàn bộ ảnh */
+    border-radius: var(--border-radius);
+    margin: 0 auto 1rem auto; /* Căn giữa và thêm khoảng cách dưới */
+}
+
+.product h3 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 0.7rem;
+    min-height: 3.4em; /* Đảm bảo đủ chỗ cho tên dài */
+    color: var(--dark-color);
+}
+
+.product .price {
+    font-size: 1.4rem; /* Tăng kích thước giá */
+    font-weight: 700;
+    color: var(--primary-color); /* Đổi màu giá sang màu chính */
+    margin: 0.5rem 0 1.2rem 0; /* Điều chỉnh margin */
+}
+
+/* === BUTTONS (Nút Mua Hàng) === */
+.btn-buy {
+    background-color: var(--accent-color);
+    color: var(--light-color);
+    padding: 0.7rem 1.8rem; /* Tăng padding */
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+    margin-top: auto; /* Đẩy nút xuống cuối cùng */
+}
+
+.btn-buy:hover {
+    background-color: var(--accent-hover-color);
+    transform: scale(1.03);
+}
+.btn-buy:active {
+    transform: scale(0.98);
+}
+
+/* === FOOTER === (Thêm style dựa trên HTML) */
+footer {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    text-align: center;
+    padding: 1.8rem 0;
+    margin-top: 3rem;
+}
+
+footer p {
+    opacity: 0.8;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+    header .container {
+        flex-direction: column;
+        align-items: center; /* Căn giữa các phần tử khi xếp chồng */
+    }
+    .search-form {
+        order: 3; /* Đẩy search xuống dưới nav */
+        max-width: 90%;
+        margin-top: 0.5rem;
+    }
+    nav ul {
+        order: 2; /* Nav ở giữa */
+        margin-top: 0.5rem;
+        flex-wrap: wrap; /* Cho phép nav xuống dòng */
+        justify-content: center;
+    }
+    nav ul li {
+        margin: 0.3rem 0.5rem; /* Thêm khoảng cách dọc/ngang */
+    }
+    .banner h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.6rem;
+    }
+    .product-list {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Giảm min size */
+        gap: 1.5rem;
+    }
+    .product {
+        padding: 1rem;
+    }
+    .product img {
+        height: 160px;
+    }
+    .product .price {
+        font-size: 1.2rem;
+    }
+    .btn-buy {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    header .container {
+         align-items: center; /* Vẫn căn giữa */
+    }
+     header h1 {
+        text-align: center; /* Căn giữa title */
+        width: 100%;
+    }
+    .search-form {
+         max-width: 100%;
+    }
+    nav ul {
+        justify-content: center;
+    }
+    nav ul li {
+         margin: 0.2rem 0.4rem;
+    }
+     nav a, .dropbtn, nav .cart, nav .logout {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.7rem;
+    }
+     .product-list {
+        grid-template-columns: 1fr; /* 1 cột */
+        gap: 1rem;
+    }
+     .product img {
+        width: 70%;
+        height: 180px;
+    }
+    .banner {
+        padding: 2rem 1rem;
+    }
+    .banner h2 {
+        font-size: 1.6rem;
+    }
+}
