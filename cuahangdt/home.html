@@ -62,9 +62,21 @@
         .home-container .btn:hover {
             background-color: #3498db;
         }
+        
     </style>
 </head>
 <body>
+    <h2>Welcome, <span id="userDisplay"></span>!</h2>
+
+<script>
+  const user = localStorage.getItem("loggedInUser");
+  if (user) {
+    document.getElementById("userDisplay").textContent = user;
+  } else {
+    // Nếu chưa đăng nhập, quay lại login
+    window.location.href = "login.html";
+  }
+</script>
     <div class="home-container">
         <h2>🎉 Login Successful!</h2>
         <p>Welcome back to the system!</p>

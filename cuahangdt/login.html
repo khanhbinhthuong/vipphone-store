@@ -69,6 +69,7 @@
                 console.log(data);
 
                 if (data.status === "success") {
+                    localStorage.setItem("loggedInUser", JSON.stringify({ username }));
                     messageDiv.innerText = "Đăng nhập thành công! Đang chuyển trang...";
                     messageDiv.style.color = "green";
 
